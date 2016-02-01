@@ -598,5 +598,5 @@ function digitUppercase (n) {
  * @return {boolean}
  */
 function isArray(a) {
-  Array.isArray ? Array.isArray(a) : Object.prototype.toString.call(a) === '[object Array]';
+    Array.isArray ? Array.isArray(a) : Object.prototype.toString.call(a) === '[object Array]';
 }
