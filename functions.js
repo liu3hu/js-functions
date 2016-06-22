@@ -600,3 +600,76 @@ function digitUppercase (n) {
 function isArray(a) {
     Array.isArray ? Array.isArray(a) : Object.prototype.toString.call(a) === '[object Array]';
 }
+
+
+/**
+ * JSON字符串转换为对象
+ * @param string        JSON字符串
+ * @return {Object}     转换后对象
+ */
+function jsonStringToObject (string){
+    try
+    {
+        return eval("(" + string + ")");
+    }
+    catch (err)
+    {
+        return null;
+    }
+};
+
+/**
+ * 对象转JSON字符串
+ * @param obj           对象
+ * @return {string}     JSON字符串
+ */
+function objectToJsonString (obj){
+    var S = [];
+    var J = null;
+
+    var type = Object.prototype.toString.apply(obj);
+
+    if (type === '[object Array]')
+    {
+        for (var i = 0; i < obj.length; i++)
+        {
+            S.push(objectToJsonString(obj[i]));
+        }
+        J = '[' + S.join(',') + ']';
+    }
+    else if (type === '[object Date]')
+    {
+        J = "new Date(" + obj.getTime() + ")";
+    }
+    else if (type === '[object RegExp]'
+        || type === '[object Function]')
+    {
+        J = obj.toString();
+    }
+    else if (type === '[object Object]')
+    {
+        for (var key in obj)
+        {
+            var value = objectToJsonString(obj[key]);
+            if (value != null)
+            {
+                S.push('"' + key + '":' + value);
+            }
+        }
+        J = '{' + S.join(',') + '}';
+    }
+    else if (type === '[object String]')
+    {
+        J = '"' + obj.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '') + '"';
+    }
+    else if (type === '[object Number]')
+    {
+        J = obj;
+    }
+    else if (type === '[object Boolean]')
+    {
+        J = obj;
+    }
+
+    return J;
+};
