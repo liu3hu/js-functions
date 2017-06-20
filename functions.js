@@ -1,14 +1,4 @@
 /**
- * 检测字符串是否是电子邮件地址格式
- * @param 	{string}	value	待检测字符串
- * @returns {string}
- */
-function isEmail(value){
-    var Reg =/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-    return Reg.test(value);
-}
-
-/**
  * 和PHP一样的时间戳格式化函数
  * @param  {string} format    格式
  * @param  {int}    timestamp 要格式化的时间 默认为当前时间
@@ -200,7 +190,7 @@ function date(format, timestamp){
  * @param  {mix} arg2 
  * @return {number}      
  */
-function accMul(arg1,arg2) { 
+function acc_mul(arg1,arg2) {
     var m=0,s1=arg1.toString(),s2=arg2.toString();
     try{
         if(s1.split(".")[1] != undefined )
@@ -219,7 +209,7 @@ function accMul(arg1,arg2) {
  * @param  {mix} arg2
  * @return {number}
  */
-function accDiv(arg1,arg2){
+function acc_div(arg1,arg2){
   var r1=0,r2=0,m,s1=arg1.toString(),s2=arg2.toString();
   try{
       if(s1.split(".")[1] != undefined )
@@ -230,7 +220,7 @@ function accDiv(arg1,arg2){
           r2=s2.split(".")[1].length;
   }catch(e){}
   m=Math.pow(10,Math.max(r1,r2));
-  return (accMul(arg1,m))/(accMul(arg2,m));
+  return (acc_mul(arg1,m))/(acc_mul(arg2,m));
 }
 
 /**
@@ -239,7 +229,7 @@ function accDiv(arg1,arg2){
  * @param  {mix} arg2
  * @return {number}
  */
-function accAdd(arg1,arg2){ 
+function acc_add(arg1,arg2){
   var r1=0,r2=0,m,s1=arg1.toString(),s2=arg2.toString();
   try{
       if(s1.split(".")[1] != undefined )
@@ -250,7 +240,7 @@ function accAdd(arg1,arg2){
           r2=s2.split(".")[1].length;
   }catch(e){}
   m=Math.pow(10,Math.max(r1,r2));
-  return (accMul(arg1,m)+accMul(arg2,m))/m;
+  return (acc_mul(arg1,m)+acc_mul(arg2,m))/m;
 } 
 
 /**
@@ -259,7 +249,7 @@ function accAdd(arg1,arg2){
  * @param  {mix} arg2
  * @return {number}
  */
-function accSub(arg1,arg2){
+function acc_sub(arg1,arg2){
    var r1=0,r2=0,m,n,s1=arg1.toString(),s2=arg2.toString();
    try{
        if(s1.split(".")[1] != undefined )
@@ -273,7 +263,7 @@ function accSub(arg1,arg2){
    //last modify by deeka
    //动态控制精度长度
    n=(r1>=r2)?r1:r2;
-   return (accMul(arg1,m)-accMul(arg2,m))/m;
+   return (acc_mul(arg1,m)-acc_mul(arg2,m))/m;
 }
 
 /**
@@ -282,7 +272,7 @@ function accSub(arg1,arg2){
  * @return {string}     返回base64编码的结果
  */
 function base64_encode(str){
-    var str = toUTF8(str);
+    var str = to_utf8(str);
     var base64EncodeChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split('');
     var out, i, j, len, r, l, c;
     i = j = 0;
@@ -387,7 +377,7 @@ function base64_decode(str){
  
         out[j++] = String.fromCharCode(((c3 & 0x03) << 6) | c4);
     }
-    return toUTF16(out.join(''));
+    return to_utf16(out.join(''));
 }
 
 /**
@@ -395,7 +385,7 @@ function base64_decode(str){
  * @param  {string} str 待编码字符串
  * @return {string}
  */
-function toUTF8(str){
+function to_utf8(str){
     if (str.match(/^[\x00-\x7f]*$/) != null) {
         return str.toString();
     }
@@ -450,7 +440,7 @@ function toUTF8(str){
  * @param  {string} str 待编码字符串
  * @return {string}
  */
-function toUTF16(str){
+function to_utf16(str){
     if ((str.match(/^[\x00-\x7f]*$/) != null) ||
         (str.match(/^[\x00-\xff]*$/) == null)) {
         return str.toString();
@@ -517,15 +507,15 @@ function toUTF16(str){
 }
 
 /**
- * 获取cookie
- * @param  {string} cname        cookie名称
- * @param  {string} cvalue       cookie值
- * @param  {int}    expire_days  过期时间 单位天
+ * 设置cookie
+ * @param  {string} cname   cookie名称
+ * @param  {string} cvalue  cookie值
+ * @param  {int}    expire  过期时间 单位秒
  * @return {void}
  */
-function setCookie (cname, cvalue, expire_days) {
+function set_cookie (cname, cvalue, expire) {
     var d = new Date();
-    d.setTime(d.getTime() + (expire_days*24*60*60*1000));
+    d.setTime(d.getTime() + (expire*1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
 }
@@ -535,7 +525,7 @@ function setCookie (cname, cvalue, expire_days) {
  * @param  {string} cname cookie名称
  * @return {string} 返回cookie的值
  */
-function getCookie (cname) {
+function get_cookie (cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i=0; i<ca.length; i++) {
@@ -551,8 +541,8 @@ function getCookie (cname) {
  * @param  {string} cname cookie名称
  * @return {void}
  */
-function clearCookie (cname) {
-    setCookie(cname, "", -1);
+function clear_cookie (cname) {
+    set_cookie(cname, "", -1);
 }
 
 /**
@@ -560,7 +550,7 @@ function clearCookie (cname) {
  * @param  {number} n  数字
  * @return {string} 转换后的大写金额
  */
-function digitUppercase (n) {
+function cny (n) {
     var fraction = ['角', '分'];
     var digit = [
         '零', '壹', '贰', '叁', '肆',
@@ -597,7 +587,7 @@ function digitUppercase (n) {
  * @param  {mix} a  待判断变量
  * @return {boolean}
  */
-function isArray(a) {
+function is_array(a) {
     Array.isArray ? Array.isArray(a) : Object.prototype.toString.call(a) === '[object Array]';
 }
 
@@ -607,7 +597,7 @@ function isArray(a) {
  * @param string        JSON字符串
  * @return {Object}     转换后对象
  */
-function jsonStringToObject (string){
+function string_to_object (string){
     try
     {
         return eval("(" + string + ")");
@@ -618,12 +608,13 @@ function jsonStringToObject (string){
     }
 };
 
+
 /**
  * 对象转JSON字符串
  * @param obj           对象
  * @return {string}     JSON字符串
  */
-function objectToJsonString (obj){
+function object_to_string (object){
     var S = [];
     var J = null;
 
@@ -633,7 +624,7 @@ function objectToJsonString (obj){
     {
         for (var i = 0; i < obj.length; i++)
         {
-            S.push(objectToJsonString(obj[i]));
+            S.push(object_to_string(obj[i]));
         }
         J = '[' + S.join(',') + ']';
     }
@@ -650,7 +641,7 @@ function objectToJsonString (obj){
     {
         for (var key in obj)
         {
-            var value = objectToJsonString(obj[key]);
+            var value = object_to_string(obj[key]);
             if (value != null)
             {
                 S.push('"' + key + '":' + value);
